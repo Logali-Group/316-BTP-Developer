@@ -36,6 +36,44 @@ class lhc_BookingSupplement implementation.
   endmethod.
 
   method setBookSupplNumber.
+
+    data max_bookingsupplementid type /dmo/booking_supplement_id.
+    data bookingsupplements_update type table for update z_r_travel_316\\BookingSupplement.
+
+    read entities of z_r_travel_316 in local mode
+      entity BookingSupplement by \_Booking
+        fields (  BookingUUID  )
+        with corresponding #( keys )
+      result data(bookings).
+
+    loop at bookings into data(ls_booking).
+      read entities of z_r_travel_316 in local mode
+        entity Booking by \_BookingSupplement
+          fields ( BookingSupplementID )
+          with value #( ( %tky = ls_booking-%tky ) )
+        result data(bookingsupplements).
+
+      max_bookingsupplementid = '00'.
+      loop at bookingsupplements into data(bookingsupplement).
+        if bookingsupplement-BookingSupplementID > max_bookingsupplementid.
+          max_bookingsupplementid = bookingsupplement-BookingSupplementID.
+        endif.
+      endloop.
+
+      loop at bookingsupplements into bookingsupplement where BookingSupplementID is initial.
+        max_bookingsupplementid += 1.
+        append value #( %tky                = bookingsupplement-%tky
+                        bookingsupplementid = max_bookingsupplementid
+                      ) to bookingsupplements_update.
+
+      endloop.
+    endloop.
+
+    modify entities of z_r_travel_316 in local mode
+      entity BookingSupplement
+        update fields ( BookingSupplementID ) with bookingsupplements_update.
+
+
   endmethod.
 
   method validateCurrencyCode.

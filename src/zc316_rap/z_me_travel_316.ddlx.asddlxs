@@ -91,6 +91,10 @@ annotate entity z_c_travel_316 with
          identification: [{ position: 70 }]}
   TotalPrice;
 
+  @UI:{ lineItem: [{ position: 71,
+                       importance: #MEDIUM }]}
+  PriceWithVAT;
+
   @UI:{ lineItem: [{ position: 80,
                     importance: #MEDIUM }],
         identification: [{ position: 80 }]}

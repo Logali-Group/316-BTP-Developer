@@ -1,6 +1,16 @@
 class lhc_Travel definition inheriting from cl_abap_behavior_handler.
   private section.
 
+    types:
+      ty_travel_create               type table for create   z_r_travel_316\\Travel,
+      ty_travel_update               type table for update   z_r_travel_316\\Travel,
+      ty_travel_delete               type table for delete   z_r_travel_316\\Travel,
+      ty_travel_failed               type table for failed   z_r_travel_316\\Travel,
+      ty_travel_reported             type table for reported z_r_travel_316\\Travel,
+
+      ty_travel_action_accept_import type table for action import z_r_travel_316\\Travel~acceptTravel,
+      ty_travel_action_accept_result type table for action result z_r_travel_316\\Travel~acceptTravel.
+
     constants:
       begin of travel_status,
         open     type c length 1 value 'O', "Open
@@ -64,6 +74,33 @@ endclass.
 class lhc_Travel implementation.
 
   method get_instance_features.
+
+    read entities of z_r_travel_316 in local mode
+          entity Travel
+          fields ( OverallStatus )
+          with corresponding #( keys )
+          result data(travels)
+          failed failed.
+
+    result = value #( for travel in travels
+                          ( %tky =  travel-%tky
+                            %field-BookingFee = cond #( when travel-OverallStatus = travel_status-accepted
+                                                        then if_abap_behv=>fc-f-read_only
+                                                        else if_abap_behv=>fc-f-unrestricted )
+                           %action-acceptTravel = cond #( when travel-OverallStatus = travel_status-accepted
+                                                          then if_abap_behv=>fc-o-disabled
+                                                          else if_abap_behv=>fc-o-enabled )
+                           %action-rejectTravel = cond #( when travel-OverallStatus = travel_status-rejected
+                                                          then if_abap_behv=>fc-o-disabled
+                                                          else if_abap_behv=>fc-o-enabled )
+                           %action-deductDiscount = cond #( when travel-OverallStatus = travel_status-accepted
+                                                          then if_abap_behv=>fc-o-disabled
+                                                          else if_abap_behv=>fc-o-enabled )
+                           %assoc-_Booking   = cond #( when travel-OverallStatus = travel_status-rejected
+                                                          then if_abap_behv=>fc-o-disabled
+                                                          else if_abap_behv=>fc-o-enabled ) )  ).
+
+
   endmethod.
 
   method get_instance_authorizations.
@@ -184,6 +221,12 @@ class lhc_Travel implementation.
   endmethod.
 
   method calculateTotalPrice.
+
+   modify entities of z_r_travel_316 in local mode
+          entity Travel
+          execute reCalcTotalPrice
+          from corresponding #( keys ).
+
   endmethod.
 
   method setStatusOpen.
@@ -237,6 +280,60 @@ class lhc_Travel implementation.
   endmethod.
 
   method validateCustomer.
+
+    read entities of z_r_travel_316 in local mode
+        entity Travel
+        fields ( CustomerID )
+        with corresponding #( keys )
+        result data(travels).
+
+    data customers type sorted table of /dmo/customer with unique key client customer_id.
+
+    customers = corresponding #( travels discarding duplicates mapping customer_id = CustomerID except * ).
+    delete customers where customer_id is initial.
+
+    if customers is not initial.
+
+      select from /dmo/customer as ddbb
+             inner join @customers as http_req on ddbb~customer_id = http_req~customer_id
+             fields ddbb~customer_id
+             into table @data(valid_customers).
+
+    endif.
+
+
+    loop at travels into data(travel).
+
+*      reported-travel[ 1 ]-
+
+      append value #( %tky        = travel-%tky
+                      %state_area = 'VALIDATE_CUSTOMER' ) to reported-travel.
+
+      if travel-CustomerID is initial.
+
+        append value #( %tky = travel-%tky ) to failed-travel.
+
+        append value #( %tky = travel-%tky
+                        %state_area = 'VALIDATE_CUSTOMER'
+                        %msg = new /dmo/cm_flight_messages( textid   = /dmo/cm_flight_messages=>enter_customer_id
+                                                          severity = if_abap_behv_message=>severity-error )
+                        %element-CustomerID    = if_abap_behv=>mk-on ) to reported-travel.
+
+      elseif travel-CustomerID is not initial and not line_exists( valid_customers[ customer_id = travel-CustomerID ] ).
+
+        append value #( %tky = travel-%tky ) to failed-travel.
+
+        append value #( %tky = travel-%tky
+                        %state_area = 'VALIDATE_CUSTOMER'
+                        %msg = new /dmo/cm_flight_messages( textid      = /dmo/cm_flight_messages=>customer_unkown
+                                                            severity    = if_abap_behv_message=>severity-error
+                                                            customer_id = travel-CustomerID )
+                        %element-CustomerID    = if_abap_behv=>mk-on ) to reported-travel.
+
+      endif.
+
+    endloop.
+
   endmethod.
 
   method validateDates.
