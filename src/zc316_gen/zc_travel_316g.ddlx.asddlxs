@@ -1,0 +1,210 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'TravelUuid'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'TravelUuid'
+annotate view ZC_TRAVEL_316G with
+{
+  @EndUserText.label: 'TravelUuid'
+  @UI.facet: [ {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'UUID'
+  } ]
+  @UI.lineItem: [ {
+    position: 10 , 
+    label: 'UUID'
+  } ]
+  @UI.selectionField: [ {
+    position: 10 
+  } ]
+  TravelUuid;
+  
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'Travel ID'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'Travel ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  TravelId;
+  
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Agency ID'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Agency ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  AgencyId;
+  
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Customer ID'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 , 
+    label: 'Customer ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  CustomerId;
+  
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Starting Date'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 , 
+    label: 'Starting Date'
+  } ]
+  @UI.selectionField: [ {
+    position: 50 
+  } ]
+  BeginDate;
+  
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'End Date'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'End Date'
+  } ]
+  @UI.selectionField: [ {
+    position: 60 
+  } ]
+  EndDate;
+  
+  @UI.identification: [ {
+    position: 70 , 
+    label: 'Booking Fee'
+  } ]
+  @UI.lineItem: [ {
+    position: 70 , 
+    label: 'Booking Fee'
+  } ]
+  @UI.selectionField: [ {
+    position: 70 
+  } ]
+  BookingFee;
+  
+  @UI.identification: [ {
+    position: 80 , 
+    label: 'Total Price'
+  } ]
+  @UI.lineItem: [ {
+    position: 80 , 
+    label: 'Total Price'
+  } ]
+  @UI.selectionField: [ {
+    position: 80 
+  } ]
+  TotalPrice;
+  
+  @UI.identification: [ {
+    position: 90 , 
+    label: 'Description'
+  } ]
+  @UI.lineItem: [ {
+    position: 90 , 
+    label: 'Description'
+  } ]
+  @UI.selectionField: [ {
+    position: 90 
+  } ]
+  Description;
+  
+  @UI.identification: [ {
+    position: 100 , 
+    label: 'Overall Status'
+  } ]
+  @UI.lineItem: [ {
+    position: 100 , 
+    label: 'Overall Status'
+  } ]
+  @UI.selectionField: [ {
+    position: 100 
+  } ]
+  OverallStatus;
+  
+  @UI.identification: [ {
+    position: 110 , 
+    label: 'Created By'
+  } ]
+  @UI.lineItem: [ {
+    position: 110 , 
+    label: 'Created By'
+  } ]
+  @UI.selectionField: [ {
+    position: 110 
+  } ]
+  LocalCreatedBy;
+  
+  @UI.identification: [ {
+    position: 120 , 
+    label: 'Created On'
+  } ]
+  @UI.lineItem: [ {
+    position: 120 , 
+    label: 'Created On'
+  } ]
+  @UI.selectionField: [ {
+    position: 120 
+  } ]
+  LocalCreatedAt;
+  
+  @UI.identification: [ {
+    position: 130 , 
+    label: 'Changed By'
+  } ]
+  @UI.lineItem: [ {
+    position: 130 , 
+    label: 'Changed By'
+  } ]
+  @UI.selectionField: [ {
+    position: 130 
+  } ]
+  LocalLastChangedBy;
+  
+  @UI.identification: [ {
+    position: 140 , 
+    label: 'Changed On'
+  } ]
+  @UI.lineItem: [ {
+    position: 140 , 
+    label: 'Changed On'
+  } ]
+  @UI.selectionField: [ {
+    position: 140 
+  } ]
+  LocalLastChangedAt;
+  
+  @UI.identification: [ {
+    position: 150 , 
+    label: 'Changed On'
+  } ]
+  @UI.lineItem: [ {
+    position: 150 , 
+    label: 'Changed On'
+  } ]
+  @UI.selectionField: [ {
+    position: 150 
+  } ]
+  LastChangedAt;
+}

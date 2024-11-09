@@ -38,7 +38,7 @@ define root view entity z_r_travel_316
       //ETag - global
       @Semantics.systemDateTime.lastChangedAt: true
       last_changed_at       as LastChangedAt,
-
+ 
       // Make association public
       _Booking,
       _Agency,
